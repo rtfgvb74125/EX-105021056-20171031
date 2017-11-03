@@ -10,7 +10,7 @@ public class LoginFram extends JFrame{
     private JLabel jlabID = new JLabel("ID :");
     private JLabel jlabPW = new JLabel("Password :");
     private JPasswordField jPW = new JPasswordField();
-    private JTextField jtx = new JTextField();
+    private JTextField jtx = new JTextField("h304");
     private int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
     private int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
     private int frmW = 300,frmH =  150;

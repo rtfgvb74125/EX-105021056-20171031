@@ -10,7 +10,7 @@ public class MainFrame extends JFrame{
     private LoginFram lgfm;
     private int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
     private int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
-    private int frmW = 500, frmH = 400;
+    private int frmW = 700, frmH = 900;
     //清單建立元件
     private JMenuBar jmb = new JMenuBar();
     private JMenu jmF = new JMenu("File");
@@ -19,10 +19,11 @@ public class MainFrame extends JFrame{
     private JMenu jmAbout = new JMenu("About");
     private JMenuItem jmiExit = new JMenuItem("Exit");
     private JMenuItem jmiLotto = new JMenuItem("Lotto");
+    private JMenuItem jmiKeybo = new JMenuItem("Keyboard");
     private JMenuItem jmiCategory = new JMenuItem("Category");
     private JDesktopPane jdp = new JDesktopPane();
     //LOTTO子視窗
-    private JInternalFrame jif = new JInternalFrame();
+    private JInternalFrame jifLoto = new JInternalFrame();
     private JButton jbtnClose  = new JButton("Close");
     private JButton jbtnRemake = new JButton("Rerandom");
     private int data[] = new int[6];
@@ -30,9 +31,16 @@ public class MainFrame extends JFrame{
     private Random rnd = new Random(System.currentTimeMillis());
     private JPanel jpnNumber = new JPanel(new GridLayout(1,6,3,3));
     private JPanel jpnControl = new JPanel(new GridLayout(1,2,3,3));
-
     //Math Keyboard子視窗
-
+    private JInternalFrame jifkey = new JInternalFrame();
+    private JButton jbtnClear = new JButton("Clear");
+    private JButton jbtnKeyRe = new JButton("Remake");
+    private JButton jbtnKeyClose = new JButton("Close");
+    private JButton jbtnKey[] = new JButton[10];
+    private int data2[] = new int [10];
+    private JPanel jpnKey = new JPanel(new GridLayout(3,4,3,3));
+    private JTextField jtxKey = new JTextField();
+    private Random ran = new Random(System.currentTimeMillis());
     //更改視窗字型元件
     private JPanel jPanel1 = new JPanel(new GridLayout(2,3,5,5));
     private JMenuItem jmiSetFont = new JMenuItem("Set Font");
@@ -60,7 +68,6 @@ public class MainFrame extends JFrame{
     }
     private void init(){
         this.setBounds(screenW/2-frmW/2,screenH/2-frmH/2,frmW,frmH);
-        jif.setBounds(0,0,300,200);
         this.setJMenuBar(jmb);
         this.setContentPane(jdp);
         jmb.add(jmF);
@@ -69,15 +76,28 @@ public class MainFrame extends JFrame{
         jmb.add(jmAbout);
         jmF.add(jmiExit);
         jmGame.add(jmiLotto);
-        jif.setLayout(new BorderLayout(3,3));
-        jif.add(jpnControl,BorderLayout.NORTH);
-        jif.add(jpnNumber,BorderLayout.CENTER);
+        jmGame.add(jmiKeybo);
+        //快捷建
+        jmiExit.setAccelerator(KeyStroke.getKeyStroke('C',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        jmiLotto.setAccelerator(KeyStroke.getKeyStroke('X',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        jmiKeybo.setAccelerator(KeyStroke.getKeyStroke('Z',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+       //Lotto
+        jifLoto.setBounds(0,0,300,200);
+        jifLoto.setLayout(new BorderLayout(3,3));
+        jifLoto.add(jpnControl,BorderLayout.SOUTH);
+        jifLoto.add(jpnNumber,BorderLayout.CENTER);
         Number();
         jpnControl.add(jbtnClose);
         jpnControl.add(jbtnRemake);
-
-        jmiExit.setAccelerator(KeyStroke.getKeyStroke('C',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-
+       //KeyBoard
+        jifkey.setBounds(0,300,600,400);
+        jifkey.setLayout(new BorderLayout(3,3));
+        jifkey.add(jtxKey,BorderLayout.NORTH);
+        jifkey.add(jpnKey,BorderLayout.CENTER);
+        jifkey.add(jbtnClear,BorderLayout.SOUTH);
+        jtxKey.setEditable(false);
+        KeyboNum();
+        //更改式窗文字元件
         jmSet.add(jmiSetFont);
         jPanel1.add(jlabFamily);
         jPanel1.add(jlabStyle);
@@ -85,6 +105,7 @@ public class MainFrame extends JFrame{
         jPanel1.add(jtxFamily);
         jPanel1.add(jcombo);
         jPanel1.add(jtxSize);
+        //當按選擇器
 
         for(int i = 0;i<6;i++){
 
@@ -97,6 +118,22 @@ public class MainFrame extends JFrame{
             jpnNumber.add(jlab[i]);
         }
 
+        for(int i = 0;i<10;i++){
+            jbtnKey[i] = new JButton();
+            jbtnKey[i].setBackground(new Color(40,143,25));
+            jbtnKey[i].setText(Integer.toString(data2[i]));
+            jbtnKey[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton tmp = (JButton)e.getSource();
+                    jtxKey.setText(jtxKey.getText()+tmp.getText());
+                }
+            });
+
+            jpnKey.add(jbtnKey[i]);
+        }
+        jpnKey.add(jbtnKeyRe);
+        jpnKey.add(jbtnKeyClose);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -115,15 +152,23 @@ public class MainFrame extends JFrame{
         jmiLotto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jdp.add(jif);
-                jif.setVisible(true);
+                jdp.add(jifLoto);
+                jifLoto.setVisible(true);
+            }
+        });
+
+        jmiKeybo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jdp.add(jifkey);
+                jifkey.setVisible(true);
             }
         });
 
         jbtnClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jif.setVisible(false);
+                jifLoto.setVisible(false);
             }
         });
 
@@ -134,6 +179,30 @@ public class MainFrame extends JFrame{
                 for(int i = 0;i<6;i++){
                     jlab[i].setText(Integer.toString(data[i]));
                 }
+            }
+        });
+
+        jbtnKeyRe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                KeyboNum();
+                for(int i = 0;i<10;i++){
+                    jbtnKey[i].setText(Integer.toString(data2[i]));
+                }
+            }
+        });
+
+        jbtnKeyClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jifkey.setVisible(false);
+            }
+        });
+
+        jbtnClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jtxKey.setText("");
             }
         });
 
@@ -166,12 +235,25 @@ public class MainFrame extends JFrame{
                 }
             }
         });
+
+
     }
     private void Number(){
         for(int i = 0;i <6;i++){
             data[i] = rnd.nextInt(42)+1;
             for(int j = 0;j<i;j++){
                 if(data[i]==data[j]){
+                    i--;
+                    break;
+                }
+            }
+        }
+    }
+    private void KeyboNum(){
+        for(int i = 0;i<10;i++){
+            data2[i] = ran.nextInt(10);
+            for(int j = 0;j<i;j++){
+                if(data2[i]==data2[j]){
                     i--;
                     break;
                 }
