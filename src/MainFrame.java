@@ -1,9 +1,14 @@
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
 import java.util.Random;
 
 public class MainFrame extends JFrame{
@@ -21,6 +26,7 @@ public class MainFrame extends JFrame{
     private JMenuItem jmiLotto = new JMenuItem("Lotto");
     private JMenuItem jmiKeybo = new JMenuItem("Keyboard");
     private JMenuItem jmiCategory = new JMenuItem("Category");
+    private JMenuItem jmiBook = new JMenuItem("Book");
     private JDesktopPane jdp = new JDesktopPane();
     //LOTTO子視窗
     private JInternalFrame jifLoto = new JInternalFrame();
@@ -55,12 +61,22 @@ public class MainFrame extends JFrame{
     private JInternalFrame jifData = new JInternalFrame();
     private Container jDatacp = new Container();
     private JMenuBar jmbData = new JMenuBar();
+    private JMenu jmData = new JMenu("File");
     private JMenuItem jmiLoad = new JMenuItem("Load");
     private JMenuItem jmiNew = new JMenuItem("New");
     private JMenuItem jmiClose = new JMenuItem("Close");
     private JFileChooser jFichooser = new JFileChooser();
     private JTextArea jtxaData = new JTextArea();
-    private JScrollPane jscro = new JScrollPane();
+    private JScrollPane jscro = new JScrollPane(jtxaData);
+    private JLabel[] jlabData= new JLabel[15];
+    private JPanel jpData = new JPanel(new GridLayout(3,5,1,1));
+    private JPanel jpDataName = new JPanel(new GridLayout(1,5,1,1));
+    private JLabel jlabDataName = new JLabel("Book");
+    private JLabel jlabDataAuthor = new JLabel("Author");
+    private JLabel jlabDataPress = new JLabel("Press");
+    private JLabel jlabDataMoney = new JLabel("Money");
+    private JLabel jlabDataClass = new JLabel("Class");
+    //Book
 
     public MainFrame(LoginFram lg){
         lgfm = lg;
@@ -106,7 +122,35 @@ public class MainFrame extends JFrame{
         jPanel1.add(jcombo);
         jPanel1.add(jtxSize);
         //當按選擇器
-
+        jifData.setBounds(0,0,900,400);
+        jmF.add(jmiCategory);
+        jifData.setJMenuBar(jmbData);
+        jDatacp = new Container();
+        jifData.setContentPane(jDatacp);
+        jmbData.add(jmData);
+        jmData.add(jmiLoad);
+        jmData.add(jmiNew);
+        jmData.add(jmiClose);
+        jtxaData.setLineWrap(true);
+        jpDataName.add(jlabDataName);
+        jpDataName.add(jlabDataAuthor);
+        jpDataName.add(jlabDataPress);
+        jpDataName.add(jlabDataMoney);
+        jpDataName.add(jlabDataClass);
+        jlabDataName.setOpaque(true);
+        jlabDataName.setBackground(new Color(176, 92, 255));
+        jlabDataAuthor.setOpaque(true);
+        jlabDataAuthor.setBackground(new Color(176, 92, 255));
+        jlabDataPress.setOpaque(true);
+        jlabDataPress.setBackground(new Color(176, 92, 255));
+        jlabDataMoney.setOpaque(true);
+        jlabDataMoney.setBackground(new Color(176, 92, 255));
+        jlabDataClass.setOpaque(true);
+        jlabDataClass.setBackground(new Color(176, 92, 255));
+        jDatacp.setLayout(new BorderLayout(3,3));
+        jDatacp.add(jpDataName,BorderLayout.NORTH);
+        jDatacp.add(jpData,BorderLayout.CENTER);
+//        jDatacp.add(jscro,BorderLayout.CENTER);
         for(int i = 0;i<6;i++){
 
             jlab[i] = new JLabel();
@@ -232,6 +276,47 @@ public class MainFrame extends JFrame{
                     UIManager.put("Menu.font",new Font(jtxFamily.getText(),
                             fontStyle,Integer.parseInt(jtxSize.getText())));
 //
+                }
+            }
+        });
+
+        jmiCategory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jdp.add(jifData);
+                jifData.setVisible(true);
+            }
+        });
+
+        jmiClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jifData.setVisible(false);
+            }
+        });
+
+        jmiLoad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(jFichooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+                    try{
+                        File inFile = jFichooser.getSelectedFile();
+                        BufferedReader br = new BufferedReader(new FileReader(inFile));
+                        String str []= (br.readLine()).split(" ");
+//                        while((str = br.readLine())!=null){
+//                            jtxaData.append(str+"\n");
+//                        }
+                        for(int i = 0;i<str.length;i++){
+                            jlabData[i] = new JLabel();
+                            jlabData[i].setText(str[i]);
+                            jlabData[i].setHorizontalAlignment(SwingConstants.CENTER);
+                            jlabData[i].setOpaque(true);
+                            jlabData[i].setBackground(new Color(230,0,229));
+                            jpData.add(jlabData[i]);
+                        }
+                    }catch(Exception ioe){
+                        JOptionPane.showMessageDialog(null,"Open file error"+ioe.toString());
+                    }
                 }
             }
         });

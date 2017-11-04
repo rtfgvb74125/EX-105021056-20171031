@@ -15,7 +15,7 @@ public class LoginFram extends JFrame{
     private int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
     private int frmW = 300,frmH =  150;
     private String ID = "h304";
-    private String Password = "23323456";
+    private String Password = "";
     public LoginFram(){
         init();
     }
