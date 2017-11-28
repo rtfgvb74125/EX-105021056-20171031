@@ -22,6 +22,7 @@ public class MainFrame extends JFrame{
     private JMenu jmSet = new JMenu("Set");
     private JMenu jmGame = new JMenu("Game");
     private JMenu jmAbout = new JMenu("About");
+    private JMenu jmNetwork = new JMenu("NetWork");
     private JMenuItem jmiExit = new JMenuItem("Exit");
     private JMenuItem jmiLotto = new JMenuItem("Lotto");
     private JMenuItem jmiKeybo = new JMenuItem("Keyboard");
@@ -76,7 +77,8 @@ public class MainFrame extends JFrame{
     private JLabel jlabDataPress = new JLabel("Press");
     private JLabel jlabDataMoney = new JLabel("Money");
     private JLabel jlabDataClass = new JLabel("Class");
-    //Book
+    //Network
+    private JMenuItem jmiserver = new JMenuItem("Server");
 
     public MainFrame(LoginFram lg){
         lgfm = lg;
@@ -90,9 +92,11 @@ public class MainFrame extends JFrame{
         jmb.add(jmSet);
         jmb.add(jmGame);
         jmb.add(jmAbout);
+        jmb.add(jmNetwork);
         jmF.add(jmiExit);
         jmGame.add(jmiLotto);
         jmGame.add(jmiKeybo);
+        jmNetwork.add(jmiserver);
         //快捷建
         jmiExit.setAccelerator(KeyStroke.getKeyStroke('C',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         jmiLotto.setAccelerator(KeyStroke.getKeyStroke('X',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -318,6 +322,14 @@ public class MainFrame extends JFrame{
                         JOptionPane.showMessageDialog(null,"Open file error"+ioe.toString());
                     }
                 }
+            }
+        });
+        jmiserver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFServer jfs = new JFServer();
+                jfs.setVisible(true);
+                MainFrame.this.setVisible(false);
             }
         });
 
